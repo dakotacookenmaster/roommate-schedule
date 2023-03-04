@@ -6,7 +6,7 @@ import sys
 roommates = ["Logan Bateman", "Marc Butler", "Dakota Cookenmaster", "Brandon Gustrowsky"]
 chores = deque(["Do Dishes", "Take Out Trash", "Vacuum Living Room & Kitchen", "Clean Countertops & Table"])
 
-with open("schedule.csv", "w") as file:
+with open("schedule.csv", "w", newline='') as file:
     arguments = sys.argv
     pendulum.week_starts_at(pendulum.SUNDAY) # make sure week starts on Sunday
     pendulum.week_ends_at(pendulum.SATURDAY) # make sure the week ends on Sabbath
@@ -30,9 +30,10 @@ with open("schedule.csv", "w") as file:
     chores.rotate(week_of_month % len(roommates))
 
     csv_writer = csv.writer(file)
-    csv_writer.writerow([day.to_formatted_date_string() for day in days])
-
-    # write people & chores togther
-    chores = [f"{roommates[i]}-{chore}" for i, chore in enumerate(chores)]
-    csv_writer.writerow(chores)
+    csv_writer.writerows(
+        [
+            [day.to_formatted_date_string() for day in days],
+            [f"{roommates[i]}-{chore}" for i, chore in enumerate(chores)]
+        ]
+    )
 
